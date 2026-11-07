@@ -16,11 +16,18 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])
-        ->name('dashboard');
 
     Route::post('/logout', [AuthController::class, 'logout'])
         ->name('logout');
-});
 
-//testing github collaboration
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/admin/dashboard', [DashboardController::class, 'index'])
+            ->name('admin.dashboard');
+    });
+
+    Route::middleware('role:user')->group(function () {
+        Route::view('/user/dashboard', 'user.dashboard')
+            ->name('user.dashboard');
+    });
+
+});
